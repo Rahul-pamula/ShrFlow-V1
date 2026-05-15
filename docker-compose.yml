@@ -1,0 +1,263 @@
+# ============================================================
+# Email Engine — Docker Compose
+# Development & Production Orchestration
+#
+# Usage:
+#   Start all services:  docker-compose up --build
+#   Stop all services:   docker-compose down
+#   View logs:           docker-compose logs -f [service]
+#
+# Services:
+#   api                      → FastAPI backend          → http://localhost:8000
+#   email_sender             → Email sending worker     → (background process)
+#   import_worker            → Contact import worker    → (background process)
+#   background_worker        → Misc queue tasks         → (background process)
+#   scheduler                → Campaign scheduler       → (background process)
+#   centralized_email_worker → System notification mail → (background process)
+#   client                   → Next.js frontend         → http://localhost:3000
+#   nginx                    → Reverse proxy            → http://localhost:80 (production)
+# ============================================================
+
+services:
+
+  # ── Backend API ─────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: deploy/api/Dockerfile
+    container_name: email_engine_api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - DATABASE_URL=${DATABASE_URL}
+      - RABBITMQ_URL=${RABBITMQ_URL}
+      - REDIS_URL=${REDIS_URL}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - ENVIRONMENT=${ENVIRONMENT}
+      - FRONTEND_URL=${FRONTEND_URL}
+      # Scheduler runs as a dedicated service (scheduler) with Redis lock
+      # NEVER enable this in production with multiple API replicas
+      - ENABLE_EMBEDDED_CAMPAIGN_SCHEDULER=false
+    volumes:
+      - ./platform/api:/app/platform/api
+      - ./platform/api/assets:/app/platform/api/assets
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - email_engine_net
+
+  # ── Email Sender Worker ──────────────────────────────────
+  email_sender:
+    build:
+      context: .
+      dockerfile: deploy/worker/Dockerfile
+    container_name: email_engine_email_sender
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - DATABASE_URL=${DATABASE_URL}
+      - RABBITMQ_URL=${RABBITMQ_URL}
+      - REDIS_URL=${REDIS_URL}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - WORKER_PREFETCH_COUNT=10
+      - WORKER_MAX_RETRIES=3
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./platform:/app/platform
+    command: python email_sender.py
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - email_engine_net
+
+  # ── Contact Import Worker ────────────────────────────────
+  # REQUIRED: This worker MUST be running or contact imports
+  # will stay "pending" forever. It uses a robust S3 streaming
+  # pipeline with pandas-based parsing and chunked bulk upserts.
+  import_worker:
+    build:
+      context: .
+      dockerfile: deploy/worker/Dockerfile
+    container_name: email_engine_import_worker
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - DATABASE_URL=${DATABASE_URL}
+      - RABBITMQ_URL=${RABBITMQ_URL}
+      - REDIS_URL=${REDIS_URL}
+      - S3_BUCKET=${S3_BUCKET}
+      - S3_REGION=${S3_REGION}
+      - S3_ENDPOINT=${S3_ENDPOINT}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - IMPORT_QUEUE_NAME=import_tasks_v4
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./platform:/app/platform
+    command: python import_worker.py
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - email_engine_net
+
+  # ── Background Worker (handles misc queue tasks) ─────────
+  background_worker:
+    build:
+      context: .
+      dockerfile: deploy/worker/Dockerfile
+    container_name: email_engine_background_worker
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - DATABASE_URL=${DATABASE_URL}
+      - RABBITMQ_URL=${RABBITMQ_URL}
+      - REDIS_URL=${REDIS_URL}
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./platform:/app/platform
+    command: python background_worker.py
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - email_engine_net
+
+  # ── Scheduler ────────────────────────────────────────────
+  # Runs as a SINGLE dedicated container with a Redis distributed lock.
+  # NEVER scale this service (replicas > 1) — the lock prevents double-scheduling
+  # but one instance is always sufficient.
+  scheduler:
+    build:
+      context: .
+      dockerfile: deploy/worker/Dockerfile
+    container_name: email_engine_scheduler
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - DATABASE_URL=${DATABASE_URL}
+      - RABBITMQ_URL=${RABBITMQ_URL}
+      - REDIS_URL=${REDIS_URL}
+      - SCHEDULER_POLL_INTERVAL=60
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./platform:/app/platform
+    command: python scheduler.py
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - email_engine_net
+
+  # ── Centralized System Email Worker ─────────────────────
+  centralized_email_worker:
+    build:
+      context: .
+      dockerfile: deploy/worker/Dockerfile
+    container_name: email_engine_centralized_worker
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - SYSTEM_SMTP_HOST=${SYSTEM_SMTP_HOST}
+      - SYSTEM_SMTP_PORT=${SYSTEM_SMTP_PORT}
+      - SYSTEM_SMTP_USERNAME=${SYSTEM_SMTP_USERNAME}
+      - SYSTEM_SMTP_PASSWORD=${SYSTEM_SMTP_PASSWORD}
+      - SYSTEM_SMTP_FROM_EMAIL=${SYSTEM_SMTP_FROM_EMAIL}
+      - SYSTEM_SMTP_FROM_NAME=${SYSTEM_SMTP_FROM_NAME}
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./platform:/app/platform
+    command: python centralized_email_worker.py
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - email_engine_net
+
+  # ── Mailhog Development SMTP ────────────────────────────
+  # CURRENTLY DISABLED — uncomment for local SMTP testing
+  # mailhog:
+  #   image: mailhog/mailhog
+  #   container_name: email_engine_mailhog
+  #   restart: unless-stopped
+  #   ports:
+  #     - "1025:1025" # SMTP endpoint
+  #     - "8025:8025" # Web UI endpoint
+  #   networks:
+  #     - email_engine_net
+
+  # ── Frontend ─────────────────────────────────────────────
+  client:
+    build:
+      context: .
+      dockerfile: deploy/client/Dockerfile
+    container_name: email_engine_client
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    extra_hosts:
+      - "localhost:host-gateway"
+    env_file:
+      - .env
+    depends_on:
+      - api
+    networks:
+      - email_engine_net
+
+  # ── Template Service (Phase 13 Decomposition) ────────────
+  template_service:
+    build:
+      context: .
+      dockerfile: deploy/template_service/Dockerfile
+    container_name: email_engine_template_service
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+    env_file:
+      - .env
+    environment:
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - ENVIRONMENT=${ENVIRONMENT}
+    volumes:
+      - ./platform/services/template_service:/app/platform/services/template_service
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - email_engine_net
+
+# ── Shared Network ─────────────────────────────────────────
+networks:
+  email_engine_net:
+    driver: bridge

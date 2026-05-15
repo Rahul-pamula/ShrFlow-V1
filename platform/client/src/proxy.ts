@@ -1,0 +1,86 @@
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+
+export function proxy(request: NextRequest) {
+    const { pathname } = request.nextUrl;
+
+    if (pathname === '/settings/security') {
+        return NextResponse.redirect(new URL('/account/security', request.url));
+    }
+
+    if (pathname === '/onboarding/new') {
+        return NextResponse.redirect(new URL('/account?create=true', request.url));
+    }
+
+    // Get auth token from cookies or localStorage (via header)
+    const token = request.cookies.get('auth_token')?.value;
+
+    // Public routes that don't require authentication
+    const publicRoutes = ['/login', '/signup', '/forgot-password', '/reset-password', '/verify-email', '/waiting-room', '/team/join'];
+    const isPublicRoute = publicRoutes.some(r => pathname.startsWith(r));
+
+    // Auth routes (login, signup) — if already logged in, redirect away
+    const isAuthRoute = ['/login', '/signup'].includes(pathname);
+
+    // Onboarding routes
+    const isOnboardingRoute = pathname.startsWith('/onboarding');
+    const isAccountRoute = pathname.startsWith('/account');
+
+    // Protected app routes
+    const isProtectedRoute = ['/dashboard', '/campaigns', '/contacts', '/analytics', '/account'].some(
+        route => pathname.startsWith(route)
+    );
+
+    // Rule 1: If no access token AND no refresh token, and trying to access protected route → redirect to login
+    // We allow the request to pass if there is a refresh token so the frontend can try to recover the session.
+    const refreshToken = request.cookies.get('refresh_token')?.value;
+    
+    if (!token && !refreshToken && isProtectedRoute) {
+        return NextResponse.redirect(new URL('/login', request.url));
+    }
+
+    // Get tenant status from cookie
+    const tenantStatus = request.cookies.get('tenant_status')?.value;
+    const emailVerified = request.cookies.get('email_verified')?.value;
+
+    const allowUnverifiedRoutes = ['/verify-email', '/logout'];
+
+    // Rule 2: Auth routes must stay account-aware.
+    // Let the client resolve 1-workspace vs multi-workspace vs pending-join
+    // instead of forcing everyone to dashboard from the edge.
+    if (token && isAuthRoute) {
+        return NextResponse.next();
+    }
+
+    // Rule 2.5: Email verification gate for protected routes
+    if (token && isProtectedRoute && emailVerified === 'false' && !allowUnverifiedRoutes.some(r => pathname.startsWith(r))) {
+        return NextResponse.redirect(new URL('/verify-email', request.url));
+    }
+
+    // Rule 3: STRICT DASHBOARD ACCESS CONTROL
+    // If user is accessing dashboard but status is 'onboarding' → FORCE redirect to onboarding
+    if (token && isProtectedRoute && tenantStatus === 'onboarding' && !isAccountRoute) {
+        return NextResponse.redirect(new URL('/onboarding/workspace', request.url));
+    }
+
+    // Rule 4: If user is 'active' and tries to access onboarding pages → redirect to dashboard
+    if (token && isOnboardingRoute && tenantStatus === 'active' && pathname !== '/onboarding/new') {
+        return NextResponse.redirect(new URL('/dashboard', request.url));
+    }
+
+    return NextResponse.next();
+}
+
+export const config = {
+    matcher: [
+        /*
+         * Match all request paths except:
+         * - _next/static (static files)
+         * - _next/image (image optimization files)
+         * - _next/data (RSC/SSR data payloads)
+         * - favicon.ico (favicon file)
+         * - public files (public folder)
+         */
+        '/((?!_next/static|_next/image|_next/data|favicon.ico|.*\\.png$|.*\\.jpg$|.*\\.jpeg$|.*\\.gif$|.*\\.svg$).*)',
+    ],
+};

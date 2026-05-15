@@ -1,0 +1,118 @@
+import os
+import json
+import logging
+import aio_pika
+from typing import List, Dict, Any
+
+logger = logging.getLogger(__name__)
+
+class RabbitMQManager:
+    def __init__(self):
+        self.url = os.getenv("RABBITMQ_URL", "amqp://guest:guest@localhost/")
+        self.connection = None
+        self.channel = None
+        self.exchange = None
+        self.exchange_name = "campaign_exchange"
+        self.queue_name = "bulk_email_queue"
+        self.retry_queue_name = "bulk_email_retry_queue"
+        self.dlq_name = "bulk_email_dlq"
+
+    async def connect(self):
+        """Establish connection to RabbitMQ and declare hardened topology"""
+        if self.connection and not self.connection.is_closed:
+            return
+
+        try:
+            self.connection = await aio_pika.connect_robust(self.url)
+            self.channel = await self.connection.channel()
+            
+            # 1. Main Exchange
+            self.exchange = await self.channel.declare_exchange(
+                self.exchange_name, aio_pika.ExchangeType.DIRECT, durable=True
+            )
+            
+            # 2. DLQ Setup (The Safety Net)
+            self.dlq_exchange = await self.channel.declare_exchange(
+                "dead_letter_exchange", aio_pika.ExchangeType.DIRECT, durable=True
+            )
+            dlq_queue = await self.channel.declare_queue(self.dlq_name, durable=True)
+            await dlq_queue.bind(self.dlq_exchange, routing_key="email.failed")
+            
+            # 3. Retry Queue Setup (Delayed Backoff via DLX)
+            await self.channel.declare_queue(
+                self.retry_queue_name, 
+                durable=True,
+                arguments={
+                    "x-dead-letter-exchange": self.exchange_name,
+                    "x-dead-letter-routing-key": "email.send"
+                }
+            )
+
+            # 4. Main Queue Setup
+            main_queue = await self.channel.declare_queue(self.queue_name, durable=True)
+            await main_queue.bind(self.exchange, routing_key="email.send")
+            
+            # --- Phase 7.5: Setup Background Jobs Exchange and Queue ---
+            self.bg_exchange = await self.channel.declare_exchange(
+                "background_exchange", aio_pika.ExchangeType.DIRECT, durable=True
+            )
+
+            # Background Queue with generic DLX
+            bg_queue = await self.channel.declare_queue(
+                "background_tasks_v4", 
+                durable=True,
+                arguments={
+                    "x-dead-letter-exchange": "dead_letter_exchange",
+                    "x-dead-letter-routing-key": "task.failed"
+                }
+            )
+            await bg_queue.bind(self.bg_exchange, routing_key="task.process")
+
+            # Dedicated Import Queue
+            import_queue = await self.channel.declare_queue(
+                "import_tasks_v4", 
+                durable=True,
+                arguments={
+                    "x-dead-letter-exchange": "dead_letter_exchange",
+                    "x-dead-letter-routing-key": "task.failed"
+                }
+            )
+            await import_queue.bind(self.bg_exchange, routing_key="task.import")
+            
+            logger.info("✅ RabbitMQ hardened topology declared (Main, Retry, DLQ).")
+        except Exception as e:
+            logger.error(f"Failed to connect to RabbitMQ: {e}")
+            raise
+
+    async def publish_tasks(self, tasks: List[Dict[str, Any]]):
+        """Publish a batch of email tasks to the queue"""
+        if not self.exchange:
+            await self.connect()
+
+        for task in tasks:
+            message = aio_pika.Message(
+                body=json.dumps(task).encode(),
+                delivery_mode=aio_pika.DeliveryMode.PERSISTENT
+            )
+            await self.exchange.publish(message, routing_key="email.send")
+            
+        logger.info(f"Published {len(tasks)} messages to RabbitMQ")
+
+    async def publish_background_task(self, payload: Dict[str, Any], routing_key: str = "task.process"):
+        """Publish a generic background task (like CSV import)"""
+        if not hasattr(self, 'bg_exchange') or not self.bg_exchange:
+            await self.connect()
+            
+        message = aio_pika.Message(
+            body=json.dumps(payload).encode(),
+            delivery_mode=aio_pika.DeliveryMode.PERSISTENT
+        )
+        await self.bg_exchange.publish(message, routing_key=routing_key)
+        logger.info(f"Published background task {payload.get('task_type')} to RabbitMQ via {routing_key}")
+
+    async def close(self):
+        """Close connection gracefully"""
+        if self.connection and not self.connection.is_closed:
+            await self.connection.close()
+
+mq_client = RabbitMQManager()
