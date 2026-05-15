@@ -28,7 +28,7 @@ ShrFlow is a **full-scale, self-hosted email marketing platform** — designed a
 | **Async Workers** | Python async (aio-pika, aiosmtplib) + RabbitMQ |
 | **Database** | Supabase (PostgreSQL + Edge Functions) |
 | **State & Cache** | Redis (Upstash) |
-| **Delivery** | Amazon SES (Campaigns) & Gmail SMTP (System Mail) |
+| **Delivery** | Amazon SES (Campaigns) & Gmail SMTP (System Mail - **Temporary**) |
 
 ---
 
