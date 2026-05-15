@@ -77,12 +77,13 @@ ShrFlow is a **full-scale, self-hosted email marketing platform** — designed a
 
 ---
 
-## 🏗 Architecture & Design Documents
+## 🏗 Architecture & Technical Documentation
 
-ShrFlow uses a complex asynchronous dual-pipeline architecture. Instead of cluttering the README, all technical deep-dives, RAG design patterns, and network graphs are strictly maintained in our dedicated documentation directory:
+ShrFlow uses a complex asynchronous dual-pipeline architecture. To understand the system logic before diving into the code, please follow this reading order:
 
-*   📘 **[Complete Architectural Overview (with diagrams)](docs/phases/shrflow_architecture.md)**
-*   📋 **[Phase-by-Phase Roadmap & Execution Plan](docs/phases/phase_wise_plan.md)**
+1.  🚀 **[ENGINE_FLOW.md](docs/plan/ENGINE_FLOW.md)**: **Start here.** This explains the "Why" and "How" of the system lifecycle (Isolation, Ingestion, Orchestration, and Delivery).
+2.  📘 **[Architectural Deep-Dive](docs/plan/overview.md)**: Detailed diagrams and technical snapshots of every system component.
+3.  📋 **[Phase-by-Phase Roadmap](docs/plan/phase_wise_plan.md)**: The full strategic execution history from Phase 0 to Phase 17.
 
 ---
 
@@ -98,7 +99,7 @@ You only need exactly two things installed on your computer to run this entire p
 ### Step 2 — Clone the Repository
 ```bash
 git clone <your-repo-url>
-cd ShrFlow_
+cd ShrFlow-Handover
 ```
 
 ### Step 3 — Environment Variables & Database
