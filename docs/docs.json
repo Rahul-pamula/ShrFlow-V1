@@ -1,0 +1,48 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "ShrFlow",
+  "colors": {
+    "primary": "#4F46E5",
+    "light": "#6366F1",
+    "dark": "#4338CA"
+  },
+  "favicon": "/favicon.png",
+  "navigation": {
+    "groups": [
+      {
+        "group": "Welcome",
+        "pages": [
+          "README"
+        ]
+      },
+      {
+        "group": "Getting Started",
+        "pages": [
+          "getting-started/quick-start",
+          "getting-started/verify-domain",
+          "getting-started/first-campaign"
+        ]
+      },
+      {
+        "group": "Troubleshooting",
+        "pages": [
+          "troubleshooting/common-issues",
+          "troubleshooting/domain-issues",
+          "troubleshooting/csv-import"
+        ]
+      }
+    ]
+  },
+  "logo": {
+    "light": "https://mintlify.b-cdn.net/v6.5.1/logo/light.svg",
+    "dark": "https://mintlify.b-cdn.net/v6.5.1/logo/dark.svg"
+  },
+  "navbar": {
+    "primary": {
+      "type": "button",
+      "label": "Go to Dashboard",
+      "href": "https://app.shrflow.com"
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "ShrFlow",
+  "logo": {
+    "dark": "https://mintlify.b-cdn.net/v6.5.1/logo/dark.svg",
+    "light": "https://mintlify.b-cdn.net/v6.5.1/logo/light.svg"
+  },
+  "favicon": "/favicon.png",
+  "colors": {
+    "primary": "#4F46E5",
+    "light": "#6366F1",
+    "dark": "#4338CA"
+  },
+  "topbarCtaButton": {
+    "name": "Go to Dashboard",
+    "url": "https://app.shrflow.com"
+  },
+  "navigation": [
+    {
+      "group": "Overview",
+      "pages": [
+        "introduction"
+      ]
+    },
+    {
+      "group": "Getting Started",
+      "pages": [
+        "getting-started/quick-start",
+        "getting-started/verify-domain",
+        "getting-started/first-campaign"
+      ]
+    },
+    {
+      "group": "Core Concepts",
+      "pages": [
+        "advanced/deliverability-engine",
+        "advanced/webhooks",
+        "advanced/rbac-security"
+      ]
+    },
+    {
+      "group": "API Reference",
+      "pages": [
+        "api-reference/authentication",
+        "api-reference/campaigns",
+        "api-reference/contacts"
+      ]
+    },
+    {
+      "group": "Troubleshooting",
+      "pages": [
+        "troubleshooting/common-issues",
+        "troubleshooting/domain-issues",
+        "troubleshooting/csv-import"
+      ]
+    }
+  ]
+}

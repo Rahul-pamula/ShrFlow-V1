@@ -1,0 +1,37 @@
+---
+title: 'Authentication'
+description: 'Securely interact with the ShrFlow API using Bearer tokens.'
+icon: 'lock'
+---
+
+All programmatic requests to the ShrFlow API must be authenticated. We use standard JWT (JSON Web Token) authorization headers.
+
+<Warning>
+Keep your API keys secret. Never commit them to version control, embed them in mobile apps, or expose them in client-side JavaScript.
+</Warning>
+
+## Generating an API Key
+
+You can generate a scoped API key from the developer dashboard under **Settings > API Keys**. It is highly recommended to create a dedicated key for each unique integration (e.g., "Zapier Sync", "Internal CRM").
+
+## Making Requests
+
+Pass your API key in the `Authorization` header of your HTTP requests as a `Bearer` token.
+
+```bash
+curl -X GET "https://api.shrflow.com/v1/campaigns" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+## Rate Limits
+
+To ensure platform stability and protect against brute-force abuse, API requests are subject to rate limiting based on your workspace tier:
+
+| Plan | Limit | Header Constraints |
+|---|---|---|
+| **Hobby** | 100 req / min | `X-RateLimit-Remaining` |
+| **Pro** | 1,000 req / min | `X-RateLimit-Remaining` |
+| **Enterprise** | Custom | Custom SLA |
+
+If you exceed the limit, the API will respond with a `429 Too Many Requests` status code. You must implement exponential backoff on your end when parsing a 429 response.

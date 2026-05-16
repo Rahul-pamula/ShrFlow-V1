@@ -1,0 +1,30 @@
+---
+title: 'Introduction'
+description: 'The high-performance email delivery engine for modern software teams.'
+icon: 'book-open'
+---
+
+ShrFlow is an enterprise-grade email infrastructure platform. Built on top of Next.js, FastAPI, RabbitMQ, and Supabase, it provides unparalleled performance for managing audiences, designing templates, and dispatching multi-million-contact email campaigns.
+
+<Frame>
+  <img src="/screenshots/dashboard.png" alt="ShrFlow Dashboard" />
+</Frame>
+
+<CardGroup cols={2}>
+  <Card title="Quick Start" icon="bolt" href="/getting-started/quick-start">
+    Launch your first campaign in minutes.
+  </Card>
+  <Card title="API Reference" icon="code" href="/api-reference/authentication">
+    Integrate ShrFlow programmatically into your app.
+  </Card>
+  <Card title="Architecture" icon="server" href="/advanced/deliverability-engine">
+    Understand the distributed event-driven engine.
+  </Card>
+  <Card title="Webhooks" icon="webhook" href="/advanced/webhooks">
+    Stream open, click, and bounce events in real-time.
+  </Card>
+</CardGroup>
+
+## System Architecture
+
+ShrFlow is designed to be fully containerized, stateless at the edge, and highly available. It relies on horizontal scaling and message brokers to guarantee email delivery under intense load without dropping packets.

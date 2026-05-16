@@ -1,0 +1,45 @@
+---
+title: 'Webhooks'
+description: 'Stream email events to your own servers in real-time.'
+icon: 'webhook'
+---
+
+ShrFlow processes millions of email events (opens, clicks, bounces) per hour. Webhooks allow you to subscribe to these events and push them directly to your own infrastructure in real-time, rather than polling our API.
+
+## Configuring a Webhook Endpoint
+
+1. Go to **Settings > Webhooks** in your ShrFlow dashboard.
+2. Click **Add Endpoint** and enter your secure `HTTPS` URL.
+3. Select the event types you want to subscribe to.
+
+## Security & Verification
+
+We sign every webhook payload using a cryptographic secret unique to your endpoint. You **must** verify this signature to ensure the payload actually came from ShrFlow and was not tampered with.
+
+ShrFlow includes a `ShrFlow-Signature` header in every `POST` request.
+
+<CodeGroup>
+```javascript Node.js
+import crypto from 'crypto';
+
+function verifySignature(req, endpointSecret) {
+  const signature = req.headers['shrflow-signature'];
+  const payload = JSON.stringify(req.body);
+  
+  const expectedSignature = crypto
+    .createHmac('sha256', endpointSecret)
+    .update(payload)
+    .digest('hex');
+    
+  return signature === expectedSignature;
+}
+```
+</CodeGroup>
+
+## Event Types
+
+* `email.delivered`: Successfully reached the inbox.
+* `email.opened`: User opened the email.
+* `email.clicked`: User clicked a link (includes the URL in the payload).
+* `email.bounced`: Hard bounce or soft bounce.
+* `email.complained`: User marked the email as spam.

@@ -1,0 +1,27 @@
+---
+title: 'Deliverability Engine'
+description: 'How ShrFlow guarantees massive-scale inbox placement.'
+icon: 'rocket'
+---
+
+ShrFlow's architecture is engineered to bypass standard volume constraints using a distributed, event-driven infrastructure. 
+
+## Asynchronous Dispatch Pipeline
+
+When you dispatch a campaign to 1,000,000 users, the API does not process them synchronously.
+
+<Steps>
+  <Step title="Cursor-Based Streaming">
+    The API securely queries your audience segment using an `asyncpg` server-side cursor, streaming contacts into memory in highly optimized batches to prevent OOM (Out of Memory) crashes on the server.
+  </Step>
+  <Step title="Queue Injection">
+    Contacts are mapped to compiled MJML payloads and injected into a RabbitMQ high-throughput message broker.
+  </Step>
+  <Step title="Worker Consumption">
+    Horizontal background workers consume the queues, applying tenant-specific rate-limiting and exponential backoff to prevent IP throttling from strict inbox providers like Gmail and Outlook.
+  </Step>
+</Steps>
+
+## Bounce & Complaint Handling
+
+We automatically manage your sender reputation. If an email hard-bounces or a user reports the email as spam, the ShrFlow Webhook ingestion pipeline instantly processes the event and adds the user to your global suppression list. This guarantees you never email toxic addresses twice.

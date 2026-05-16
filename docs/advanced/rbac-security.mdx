@@ -1,0 +1,25 @@
+---
+title: 'RBAC & Security'
+description: 'Enterprise-grade tenant isolation and access control.'
+icon: 'shield-check'
+---
+
+Security is a foundational pillar of the ShrFlow architecture. Our system is built to handle highly sensitive customer data across thousands of isolated workspaces.
+
+## Tenant Isolation (Row-Level Security)
+
+ShrFlow uses PostgreSQL Row-Level Security (RLS) to enforce strict tenant isolation at the database layer. 
+
+Every query to the database is wrapped in an authenticated context tied to the user's `tenant_id`. It is mathematically impossible for a user in Workspace A to read, update, or delete campaigns, contacts, or templates belonging to Workspace B, even if there is a bug in the application logic.
+
+## Role-Based Access Control (RBAC)
+
+Within a single workspace, access is gated by strict RBAC roles.
+
+* **Owner:** Full access. Can delete the workspace, manage billing, and invite new members.
+* **Admin:** Can create campaigns, import contacts, and view analytics. Cannot manage billing.
+* **Viewer:** Read-only access. Can view analytics and preview campaigns, but cannot dispatch emails or export data.
+
+## JWT Token Invalidation
+
+ShrFlow utilizes a highly secure JWT (JSON Web Token) strategy with integer-based token versioning. If an Owner kicks a member out of a workspace, or if a password is reset, the `token_version` is instantly incremented in the database. This ensures that any active, unexpired JWTs held by the user are immediately revoked globally.
