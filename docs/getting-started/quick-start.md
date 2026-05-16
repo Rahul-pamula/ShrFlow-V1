@@ -8,7 +8,7 @@ icon: 'bolt'
 **Estimated Time:** 10 Minutes
 
 <Frame>
-  <img src="/screenshots/dashboard-checklist.png" alt="Launch Checklist" />
+  <img src="/docs/screenshots/dashboard-checklist.png" alt="Launch Checklist" />
 </Frame>
 
 ## 1. Login to Your Workspace
@@ -24,7 +24,7 @@ icon: 'bolt'
 ## 3. Import Contacts
 
 <Frame>
-  <img src="/screenshots/contacts-page.png" alt="Contacts Management" />
+  <img src="/docs/screenshots/contacts-page.png" alt="Contacts Management" />
 </Frame>
 
 * **What you should do:** Go to **Audience > Import** and upload your CSV file.

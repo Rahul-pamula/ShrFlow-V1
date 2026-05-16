@@ -9,7 +9,7 @@ Domain verification is critical for achieving high inbox placement. ShrFlow requ
 ## Step 1: Generate Records
 
 <Frame>
-  <img src="/screenshots/domain-verification.png" alt="Domain DNS Generation" />
+  <img src="/docs/screenshots/domain-verification.png" alt="Domain DNS Generation" />
 </Frame>
 
 Navigate to **Settings > Domains** in your dashboard. Enter your domain (e.g., `company.com`) to generate unique DNS records.
