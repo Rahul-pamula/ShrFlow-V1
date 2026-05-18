@@ -14,6 +14,7 @@ import {
   Workflow,
   Zap,
 } from 'lucide-react';
+import { Logo } from '@/components/ui';
 
 const integrations = ['Node.js', 'Python', 'React', 'Shopify', 'Stripe', 'Segment', 'Next.js', 'Webhook'];
 
@@ -173,10 +174,8 @@ export default function LandingPage() {
         }`}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <Link href="/" className="flex items-center gap-3">
-            <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--accent-gradient)] text-white shadow-[var(--shadow-lg)]">
-              <Mail className="h-5 w-5" />
-            </span>
+          <Link href="/" className="flex items-center gap-2">
+            <Logo className="h-8 w-auto" />
             <span className="text-base font-semibold tracking-tight text-[var(--text-primary)]">ShrFlow</span>
           </Link>
 
@@ -258,8 +257,8 @@ export default function LandingPage() {
                   <div className="rounded-2xl border border-slate-700/80 bg-slate-900/70 p-4">
                     <div className="flex items-center justify-between gap-4">
                       <div>
-                        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Deployment state</p>
-                        <h2 className="mt-2 text-xl font-semibold text-white">Spring product launch</h2>
+                        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Current Campaign</p>
+                        <h2 className="mt-2 text-xl font-semibold text-white">Daily Broadcast: Segment A</h2>
                       </div>
                       <span className="inline-flex items-center rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-xs font-semibold text-emerald-300">
                         Ready to send
@@ -269,9 +268,9 @@ export default function LandingPage() {
 
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
-                      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Audience</p>
+                      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Contact Capacity</p>
                       <p className="mt-3 text-2xl font-semibold text-white">49,820</p>
-                      <p className="mt-2 text-sm text-slate-400">99% of your 50,000 Pro contact limit used.</p>
+                      <p className="mt-2 text-sm text-slate-400">99% of your Pro Plan limit used.</p>
                     </div>
                     <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
                       <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Domain health</p>
@@ -412,10 +411,8 @@ export default function LandingPage() {
       <footer className="relative z-10 border-t border-[var(--border)] bg-[var(--bg-card)]/85 py-16 backdrop-blur-sm">
         <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
           <div>
-            <div className="mb-5 flex items-center gap-3">
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-[var(--accent-gradient)] text-white">
-                <Mail className="h-4 w-4" />
-              </span>
+            <div className="mb-5 flex items-center gap-2">
+              <Logo className="h-7 w-auto" />
               <span className="text-base font-semibold text-[var(--text-primary)]">ShrFlow</span>
             </div>
             <p className="text-sm leading-7 text-[var(--text-muted)]">
@@ -436,11 +433,7 @@ export default function LandingPage() {
             <h4 className="text-sm font-semibold uppercase tracking-[0.14em] text-[var(--text-primary)]">Developers</h4>
             <div className="mt-5 flex flex-col gap-3">
               <Link href="/docs" className="text-sm text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]">Documentation</Link>
-              <Link href="/integrations" className="text-sm text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]">Integrations</Link>
-              <a href="https://github.com" className="inline-flex items-center gap-1.5 text-sm text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]">
-                GitHub
-                <ExternalLink className="h-3 w-3" />
-              </a>
+              <button onClick={() => scrollToSection('integrations')} className="text-left text-sm text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]">Integrations</button>
             </div>
           </div>
 

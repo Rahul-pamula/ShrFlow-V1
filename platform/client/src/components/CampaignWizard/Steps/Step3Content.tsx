@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { LayoutTemplate, PenLine, Check, Search, Loader2, X, Paperclip, Upload } from "lucide-react";
+import { LayoutTemplate, PenLine, Check, Search, Loader2, X, Paperclip, Upload, FileText, AlertTriangle, ShieldCheck } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
-import { Button, FilterBar, Input, SectionCard } from "@/components/ui";
+import { Button, FilterBar, SectionCard } from "@/components/ui";
 
 type ContentMode = "compose" | "template";
 
@@ -21,6 +21,96 @@ const MODES = [
         description: "Pick a saved design from your template library.",
     },
 ];
+const TemplatePreview = ({ html, name, theme }: { html: string, name: string, theme?: any }) => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [scale, setScale] = useState(0.26);
+    const [loaded, setLoaded] = useState(false);
+
+    useEffect(() => {
+        if (!containerRef.current) return;
+        const updateScale = () => {
+            const width = containerRef.current?.offsetWidth || 160;
+            setScale(width / 600);
+        };
+        updateScale();
+        const observer = new ResizeObserver(updateScale);
+        observer.observe(containerRef.current);
+        return () => observer.disconnect();
+    }, []);
+
+    return (
+        <div ref={containerRef} className="h-full w-full relative overflow-hidden flex justify-center transition-all duration-700" style={{ background: theme?.background || "#fff", opacity: loaded ? 1 : 0.6 }}>
+            {html ? (
+                <div style={{
+                    width: "600px",
+                    height: `${containerRef.current?.offsetHeight ? containerRef.current.offsetHeight / scale : 800}px`, 
+                    transform: `scale(${scale})`,
+                    transformOrigin: "top center",
+                    pointerEvents: "none",
+                    position: "absolute",
+                    top: 0,
+                }}>
+                    <iframe 
+                        srcDoc={html} 
+                        onLoad={() => setLoaded(true)}
+                        title={`Preview ${name}`}
+                        style={{ width: "100%", height: "100%", border: "none" }}
+                    />
+                </div>
+            ) : (
+                <div className="h-full w-full bg-[var(--bg-secondary)] flex items-center justify-center text-[var(--text-muted)]">
+                    <FileText size={48} strokeWidth={1} className="opacity-10" />
+                </div>
+            )}
+        </div>
+    );
+};
+
+const MultiStatePreview = ({ bodyText }: { bodyText: string }) => {
+    const [previewState, setPreviewState] = useState<"ideal" | "partial" | "missing">("ideal");
+
+    const renderPreview = (text: string, state: "ideal" | "partial" | "missing") => {
+        const tagPattern = /\{\{(.*?)\}\}/g;
+        return text.replace(tagPattern, (match, inner) => {
+            const cleanInner = inner.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+            if (!cleanInner) return "";
+            
+            const parts = cleanInner.split("|", 2);
+            const dynamicChain = parts[0];
+            const fallback = parts.length > 1 ? parts[1].trim() : "";
+            
+            const candidates = dynamicChain.split("||").map((c: string) => c.trim().toLowerCase());
+            
+            const mockContact = {
+                ideal: { first_name: "Rahul", last_name: "Sharma", full_name: "Rahul Sharma", email: "rahul@example.com" },
+                partial: { first_name: null, last_name: null, full_name: "Rahul Sharma", email: "rahul@example.com" },
+                missing: { first_name: null, last_name: null, full_name: null, email: null }
+            };
+            
+            for (const cand of candidates) {
+                const val = mockContact[state][cand as keyof typeof mockContact.ideal];
+                if (val) return val;
+            }
+            return fallback || `[Missing ${candidates[0]}]`;
+        });
+    };
+
+    const renderedHTML = `<div style="font-family:sans-serif;font-size:14px;line-height:1.6;color:#111;">${renderPreview(bodyText, previewState).replace(/\n/g, "<br/>")}</div>`;
+
+    return (
+        <div className="mt-4 overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-input)]/30">
+            <div className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--bg-card)] px-4 py-2">
+                <span className="text-xs font-semibold text-[var(--text-secondary)]">Simulated Preview</span>
+                <div className="flex gap-1.5 bg-[var(--bg-input)] p-0.5 rounded-[var(--radius)]">
+                    <button onClick={() => setPreviewState("ideal")} className={`text-[10px] font-medium px-2.5 py-1 rounded-sm transition-all ${previewState === "ideal" ? "bg-white shadow-sm text-[var(--text-primary)]" : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]"}`}>Ideal Data</button>
+                    <button onClick={() => setPreviewState("partial")} className={`text-[10px] font-medium px-2.5 py-1 rounded-sm transition-all ${previewState === "partial" ? "bg-white shadow-sm text-[var(--text-primary)]" : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]"}`}>Partial Data</button>
+                    <button onClick={() => setPreviewState("missing")} className={`text-[10px] font-medium px-2.5 py-1 rounded-sm transition-all ${previewState === "missing" ? "bg-[var(--accent)] shadow-sm text-white" : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]"}`}>Missing Data</button>
+                </div>
+            </div>
+            <div className="p-4" dangerouslySetInnerHTML={{ __html: bodyText.trim() ? renderedHTML : "<em style='color:#9ca3af;'>Start typing to see audience preview...</em>" }} />
+        </div>
+    );
+};
 
 export default function Step3Content({ data, updateData, onNext, onBack }: any) {
     const { token } = useAuth();
@@ -30,15 +120,20 @@ export default function Step3Content({ data, updateData, onNext, onBack }: any) 
     const [search, setSearch] = useState("");
     const [bodyText, setBodyText] = useState(data.bodyText || "");
     const [attachments, setAttachments] = useState<File[]>(data.attachments || []);
+    
     const fileRef = useRef<HTMLInputElement>(null);
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     useEffect(() => {
         if (mode !== "template" || !token) return;
         setLoadingTemplates(true);
         const API_BASE = process.env.NEXT_PUBLIC_API_URL;
-        fetch(`${API_BASE}/templates/`, { headers: { Authorization: `Bearer ${token}` } })
+        fetch(`${API_BASE}/templates?page=1&limit=50`, { headers: { Authorization: `Bearer ${token}` } })
             .then((r) => (r.ok ? r.json() : { data: [] }))
-            .then((json) => setTemplates(Array.isArray(json.data) ? json.data : []))
+            .then((json) => {
+                const fetchedTemplates = Array.isArray(json.data) ? json.data : (Array.isArray(json) ? json : []);
+                setTemplates(fetchedTemplates);
+            })
             .catch(() => setTemplates([]))
             .finally(() => setLoadingTemplates(false));
     }, [mode, token]);
@@ -59,6 +154,23 @@ export default function Step3Content({ data, updateData, onNext, onBack }: any) 
             templateName: "Composed Email",
             attachments,
         });
+    };
+
+    const insertTag = (macro: string) => {
+        const textarea = textareaRef.current;
+        if (!textarea) return;
+
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const newText = bodyText.substring(0, start) + macro + bodyText.substring(end);
+        
+        handleBodyChange(newText);
+        
+        setTimeout(() => {
+            textarea.focus();
+            const newPos = start + macro.length;
+            textarea.setSelectionRange(newPos, newPos);
+        }, 0);
     };
 
     const handleTemplateSelect = (template: any) => {
@@ -90,6 +202,16 @@ export default function Step3Content({ data, updateData, onNext, onBack }: any) 
     };
 
     const filtered = templates.filter((t) => t.name.toLowerCase().includes(search.toLowerCase()));
+
+    // Confidence Logic
+    const isSafe = (() => {
+        const regex = /\{\{(.*?)\}\}/g;
+        let match;
+        while ((match = regex.exec(bodyText)) !== null) {
+            if (!match[1].includes("|")) return false; // Found a tag without a fallback
+        }
+        return true;
+    })();
 
     return (
         <div className="p-9">
@@ -135,21 +257,45 @@ export default function Step3Content({ data, updateData, onNext, onBack }: any) 
 
             {mode === "compose" && (
                 <div className="flex flex-col gap-4">
-                    <SectionCard title="Compose Message" description="Write the email body directly and optionally attach supporting files.">
+                    <SectionCard title="Guided Compose" description="Write your email and insert dynamic tags safely.">
+                        <div className="mb-4 flex items-center justify-between rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-card)] px-4 py-3">
+                            <div className="flex items-center gap-2">
+                                <span className="text-xs font-medium text-[var(--text-secondary)]">Insert Personalization:</span>
+                                <button onClick={() => insertTag("{{first_name || full_name | there}}")} className="rounded-[var(--radius)] border border-[var(--accent-border)] bg-[var(--accent)]/5 px-2.5 py-1 text-xs font-semibold text-[var(--accent)] transition-all hover:bg-[var(--accent)]/10">+ First Name</button>
+                                <button onClick={() => insertTag("{{full_name || first_name | Valued Customer}}")} className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--bg-input)] px-2.5 py-1 text-xs font-semibold text-[var(--text-primary)] transition-all hover:border-[var(--text-muted)] hover:bg-[var(--bg-hover)]">+ Full Name</button>
+                                <button onClick={() => insertTag("{{last_name | Customer}}")} className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--bg-input)] px-2.5 py-1 text-xs font-semibold text-[var(--text-primary)] transition-all hover:border-[var(--text-muted)] hover:bg-[var(--bg-hover)]">+ Last Name</button>
+                                <button onClick={() => insertTag("{{email | Subscriber}}")} className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--bg-input)] px-2.5 py-1 text-xs font-semibold text-[var(--text-primary)] transition-all hover:border-[var(--text-muted)] hover:bg-[var(--bg-hover)]">+ Email</button>
+                            </div>
+                            
+                            <div className="group relative">
+                                {isSafe ? (
+                                    <div className="flex items-center gap-1.5 text-[var(--success)]">
+                                        <ShieldCheck className="h-4 w-4" />
+                                        <span className="text-[11px] font-semibold">100% Safe</span>
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center gap-1.5 text-[var(--warning)] cursor-help">
+                                        <AlertTriangle className="h-4 w-4" />
+                                        <span className="text-[11px] font-semibold">Review Fallbacks</span>
+                                        <div className="absolute bottom-full right-0 mb-2 hidden w-48 rounded-[var(--radius)] bg-[var(--text-primary)] p-2 text-[10px] text-white shadow-lg group-hover:block">
+                                            Some tags are missing a static fallback (|). Contacts without this data will see blank spaces.
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
                         <div>
-                            <label className="mb-2 block text-xs font-medium text-[var(--text-muted)]">Email Body</label>
                             <textarea
-                                placeholder={"Hi {{first_name}},\n\nWrite your message here...\n\nBest regards,\nYour Team"}
+                                ref={textareaRef}
+                                placeholder={"Hi {{first_name || full_name | there}},\n\nWrite your message here...\n\nBest regards,\nYour Team"}
                                 value={bodyText}
                                 onChange={(e) => handleBodyChange(e.target.value)}
-                                className="min-h-[180px] w-full resize-y rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-input)] p-3.5 text-sm leading-relaxed text-[var(--text-primary)] outline-none transition-all focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]"
+                                className="min-h-[160px] w-full resize-y rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-input)] p-3.5 text-sm leading-relaxed text-[var(--text-primary)] outline-none transition-all focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]"
                             />
-                            <p className="mt-1.5 text-xs text-[var(--text-secondary)]">
-                                Use <code className="rounded-[var(--radius-sm)] bg-[var(--accent)]/10 px-1.5 py-0.5 text-[var(--accent)]">{"{{first_name}}"}</code>{" "}
-                                and{" "}
-                                <code className="rounded-[var(--radius-sm)] bg-[var(--accent)]/10 px-1.5 py-0.5 text-[var(--accent)]">{"{{last_name}}"}</code> for personalization.
-                            </p>
                         </div>
+                        
+                        <MultiStatePreview bodyText={bodyText} />
                     </SectionCard>
 
                     <SectionCard title="Attachments" description="Optional files, up to 5 per campaign.">
@@ -229,17 +375,19 @@ export default function Step3Content({ data, updateData, onNext, onBack }: any) 
                                                 : "border-[var(--border)] bg-[var(--bg-card)] hover:border-[var(--text-muted)]"
                                         }`}
                                     >
-                                        <div className="flex aspect-[16/9] items-center justify-center bg-black/40">
-                                            <LayoutTemplate className="h-5 w-5 text-[var(--text-muted)]" />
+                                        <div className="flex aspect-[16/9] items-center justify-center bg-black/40 overflow-hidden relative">
+                                            <TemplatePreview html={t.compiled_html} name={t.name} theme={t.design_json?.theme} />
                                             {isSelected && (
-                                                <div className="absolute right-1.5 top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-[var(--accent)] text-white">
+                                                <div className="absolute right-1.5 top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-[var(--accent)] text-white z-10">
                                                     <Check className="h-2.5 w-2.5" />
                                                 </div>
                                             )}
                                         </div>
-                                        <div className="p-2.5">
-                                            <p className="truncate text-xs font-semibold text-[var(--text-primary)]">{t.name}</p>
-                                            <p className="mt-0.5 text-[10px] text-[var(--text-secondary)]">{new Date(t.updated_at).toLocaleDateString()}</p>
+                                        <div className="p-2.5 bg-[var(--bg-card)]">
+                                            <h3 className="truncate text-xs font-semibold text-[var(--text-primary)]">{t.name}</h3>
+                                            <p className="mt-0.5 truncate text-[10px] text-[var(--text-secondary)]">
+                                                Updated {new Date(t.updated_at).toLocaleDateString()}
+                                            </p>
                                         </div>
                                     </button>
                                 );
@@ -250,7 +398,7 @@ export default function Step3Content({ data, updateData, onNext, onBack }: any) 
             )}
 
             <div className="mt-8 flex justify-between border-t border-[var(--border)] pt-6">
-                <Button variant="ghost" onClick={onBack}>
+                <Button onClick={onBack} variant="ghost">
                     ← Back
                 </Button>
                 <Button onClick={onNext} disabled={!canProceed()}>
