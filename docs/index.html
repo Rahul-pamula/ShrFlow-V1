@@ -503,17 +503,46 @@
       transform: scale(1.1) rotate(5deg);
     }
     
-    .sidebar .app-name-link::after {
-      content: "ShrFlow";
+    /* Sidebar Brand - Premium Side-by-Side Layout */
+    .sidebar h1.app-name {
+      margin: 0 !important;
+      padding: 1.5rem 1.25rem 1rem 1.25rem !important;
+    }
+    
+    .sidebar .app-name-link {
+      display: flex !important;
+      align-items: center !important;
+      gap: 0.75rem !important;
+      text-decoration: none !important;
+    }
+    
+    .sidebar .app-name-link img {
+      width: 30px !important;
+      height: 30px !important;
+      max-width: 30px !important;
+      margin: 0 !important;
       display: inline-block !important;
-      font-size: 1.4rem !important;
+      border: none !important;
+      box-shadow: none !important;
+      background: transparent !important;
+      flex-shrink: 0;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .sidebar .app-name-link img:hover {
+      transform: scale(1.12) rotate(8deg);
+    }
+    
+    .sidebar-brand-text {
+      font-size: 1.35rem !important;
       font-weight: 700 !important;
-      color: #0f172a !important;
-      background: linear-gradient(135deg, #1e3a8a 0%, #4f46e5 100%) !important;
-      -webkit-background-clip: text !important;
-      -webkit-text-fill-color: transparent !important;
+      background: linear-gradient(135deg, #1e3a8a 0%, #4f46e5 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       letter-spacing: -0.03em !important;
       line-height: 1 !important;
+      white-space: nowrap;
     }
   </style>
 </head>
@@ -552,7 +581,21 @@
             return this.origin.code.apply(this, arguments);
           }
         }
-      }
+      },
+      plugins: [
+        function(hook) {
+          hook.doneEach(function() {
+            // Inject ShrFlow brand text next to logo in sidebar
+            var nameLink = document.querySelector('.sidebar .app-name-link');
+            if (nameLink && !nameLink.querySelector('.sidebar-brand-text')) {
+              var brandText = document.createElement('span');
+              brandText.className = 'sidebar-brand-text';
+              brandText.textContent = 'ShrFlow';
+              nameLink.appendChild(brandText);
+            }
+          });
+        }
+      ]
     };
     
     var num = 0;
