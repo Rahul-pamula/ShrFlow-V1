@@ -1,17 +1,24 @@
-# ShrFlow Documentation
+# ShrFlow
 
-Welcome to the official ShrFlow documentation. ShrFlow is an enterprise-grade, self-hosted email marketing platform built for teams who need full infrastructure control.
-
-<div class="tech-stack">
-  <span class="tech-pill">⚡ FastAPI</span>
-  <span class="tech-pill">⚛️ Next.js 14</span>
-  <span class="tech-pill">🐇 RabbitMQ</span>
-  <span class="tech-pill">🐘 PostgreSQL</span>
-  <span class="tech-pill">🐳 Docker</span>
-  <span class="tech-pill">🛡️ Multi-tenant RLS</span>
+<div class="hero">
+  <img src="assets/shrflow-logo.svg" class="hero-logo no-shadow" alt="ShrFlow Logo">
+  <h1>ShrFlow</h1>
+  <p class="hero-sub">Enterprise Email Engine</p>
+  <p class="hero-desc">Self-hosted, multi-tenant, high-performance email marketing infrastructure built for engineering teams who need full control.</p>
+  <div class="hero-btns">
+    <a class="btn btn-primary" href="#/introduction">Get Started →</a>
+    <a class="btn btn-outline" href="#/getting-started/quick-start">Quick Start</a>
+    <a class="btn btn-outline" href="https://github.com/Rahul-pamula/ShrFlow-Handover" target="_blank">GitHub ↗</a>
+  </div>
+  <div class="hero-pills">
+    <span class="pill">⚡ FastAPI</span>
+    <span class="pill">⚛️ Next.js 14</span>
+    <span class="pill">🐇 RabbitMQ</span>
+    <span class="pill">🐘 PostgreSQL</span>
+    <span class="pill">🐳 Docker</span>
+    <span class="pill">🛡️ Multi-tenant RLS</span>
+  </div>
 </div>
-
----
 
 ## Quick Navigation
 
@@ -19,7 +26,7 @@ Welcome to the official ShrFlow documentation. ShrFlow is an enterprise-grade, s
   <a class="card" href="#/introduction">
     <div class="card-icon">📖</div>
     <div class="card-title">Introduction</div>
-    <div class="card-desc">Understand the ShrFlow architecture and core concepts.</div>
+    <div class="card-desc">Architecture overview, core concepts, and system design.</div>
     <div class="card-arrow">Read more →</div>
   </a>
   <a class="card" href="#/screen-shots/README">
@@ -38,44 +45,38 @@ Welcome to the official ShrFlow documentation. ShrFlow is an enterprise-grade, s
     <div class="card-icon">📧</div>
     <div class="card-title">First Campaign</div>
     <div class="card-desc">Send your first email campaign end-to-end.</div>
-    <div class="card-arrow">Learn more →</div>
+    <div class="card-arrow">Learn how →</div>
   </a>
   <a class="card" href="#/advanced/deliverability-engine">
     <div class="card-icon">⚙️</div>
     <div class="card-title">Delivery Engine</div>
-    <div class="card-desc">Deep-dive into the dual-path dispatch architecture.</div>
+    <div class="card-desc">Dual-path RabbitMQ dispatch architecture deep-dive.</div>
     <div class="card-arrow">Explore →</div>
   </a>
   <a class="card" href="#/api-reference/authentication">
     <div class="card-icon">📡</div>
     <div class="card-title">API Reference</div>
-    <div class="card-desc">Full REST API docs for campaigns, contacts, and auth.</div>
+    <div class="card-desc">Full REST API for campaigns, contacts, and authentication.</div>
     <div class="card-arrow">View API →</div>
   </a>
 </div>
 
 ---
 
-## Platform At a Glance
+## Platform Overview
 
-| Layer | Technology | Role |
-|-------|-----------|------|
-| **Frontend** | Next.js 14 (App Router) | Dashboard, campaigns, analytics |
-| **Backend** | FastAPI (Python) | REST API, business logic |
-| **Queue** | RabbitMQ | Async email dispatch |
-| **Database** | PostgreSQL + Supabase | Multi-tenant data store |
-| **Auth** | Supabase Auth | JWT-based authentication |
-| **Infra** | Docker Compose | Local + production orchestration |
+| Layer | Technology | Purpose |
+|-------|-----------|---------|
+| Frontend | Next.js 14 (App Router) | Campaign dashboard + analytics |
+| Backend | FastAPI (Python 3.11) | REST API + business logic |
+| Queue | RabbitMQ | Async campaign dispatch |
+| Database | PostgreSQL + Supabase | Multi-tenant data store |
+| Auth | Supabase Auth | JWT + Row-Level Security |
+| Containers | Docker Compose | Local + production deployment |
 
 ---
 
-## Getting Help
-
 <div class="callout info">
   <span class="callout-icon">💡</span>
-  <div>If you are a developer taking over this codebase, start with the <a href="#/introduction">Introduction</a> and then the <a href="#/screen-shots/README">Visual Tour</a> to orient yourself before diving into code.</div>
+  <div>New to the codebase? Start with <a href="#/introduction">Introduction</a>, then the <a href="#/screen-shots/README">Visual Tour</a> to understand the full platform before diving into code.</div>
 </div>
-
-- **Stuck?** Check [Troubleshooting →](#/troubleshooting/common-issues)
-- **Architecture questions?** See [Infrastructure →](#/infrastructure/repo-structure)
-- **Running locally?** See [Quick Start →](#/getting-started/quick-start)
