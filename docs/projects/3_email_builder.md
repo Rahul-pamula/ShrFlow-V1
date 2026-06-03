@@ -11,7 +11,7 @@ graph TD
     classDef frontend fill:#2563eb,stroke:#1d4ed8,stroke-width:2px,color:#fff,font-weight:bold,rx:5px,ry:5px;
     classDef engine fill:#10b981,stroke:#047857,stroke-width:2px,color:#fff,font-weight:bold,rx:5px,ry:5px;
     classDef worker fill:#8b5cf6,stroke:#6d28d9,stroke-width:2px,color:#fff,font-weight:bold,rx:5px,ry:5px;
-    classDef database fill:#475569,stroke:#334155,stroke-width:2px,color:#fff,font-weight:bold,rx:5px,ry:5px;
+    classDef dbClass fill:#475569,stroke:#334155,stroke-width:2px,color:#fff,font-weight:bold,rx:5px,ry:5px;
 
     subgraph DesignStudio["Frontend Design Studio"]
         Sidebar["Elements & Templates Sidebar"]
@@ -57,8 +57,8 @@ graph TD
         
         API --> DB
         Assets --> S3Storage
-        class DB database;
-        class S3Storage database;
+        class DB dbClass;
+        class S3Storage dbClass;
     end
 
     classDef dualBox fill:#f8fafc,stroke:#cbd5e1,stroke-width:2px,stroke-dasharray: 4 4;

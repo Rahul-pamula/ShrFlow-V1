@@ -11,7 +11,7 @@ graph TD
     classDef frontend fill:#2563eb,stroke:#1d4ed8,stroke-width:2px,color:#fff,font-weight:bold,rx:5px,ry:5px;
     classDef logic fill:#10b981,stroke:#047857,stroke-width:2px,color:#fff,font-weight:bold,rx:5px,ry:5px;
     classDef background fill:#8b5cf6,stroke:#6d28d9,stroke-width:2px,color:#fff,font-weight:bold,rx:5px,ry:5px;
-    classDef database fill:#475569,stroke:#334155,stroke-width:2px,color:#fff,font-weight:bold,rx:5px,ry:5px;
+    classDef dbClass fill:#475569,stroke:#334155,stroke-width:2px,color:#fff,font-weight:bold,rx:5px,ry:5px;
 
     subgraph CampaignUI["Frontend Orchestration"]
         Wizard["Multi-Step Campaign Wizard"]
@@ -55,8 +55,8 @@ graph TD
         Wizard --> Campaigns
         Rate --> Intents
         Campaigns --> Intents
-        class Campaigns database;
-        class Intents database;
+        class Campaigns dbClass;
+        class Intents dbClass;
     end
 
     classDef dualBox fill:#f8fafc,stroke:#cbd5e1,stroke-width:2px,stroke-dasharray: 4 4;

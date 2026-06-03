@@ -11,7 +11,7 @@ graph TD
     classDef frontend fill:#2563eb,stroke:#1d4ed8,stroke-width:2px,color:#fff,font-weight:bold,rx:5px,ry:5px;
     classDef auth fill:#10b981,stroke:#047857,stroke-width:2px,color:#fff,font-weight:bold,rx:5px,ry:5px;
     classDef security fill:#ef4444,stroke:#b91c1c,stroke-width:2px,color:#fff,font-weight:bold,rx:5px,ry:5px;
-    classDef database fill:#475569,stroke:#334155,stroke-width:2px,color:#fff,font-weight:bold,rx:5px,ry:5px;
+    classDef dbClass fill:#475569,stroke:#334155,stroke-width:2px,color:#fff,font-weight:bold,rx:5px,ry:5px;
 
     subgraph UserInterface["Frontend UX & Onboarding"]
         Login["Login & Signup Pages <br> w/ Google/GitHub OAuth"]
@@ -61,9 +61,9 @@ graph TD
         Tenants --> TenantUsers
         Bcrypt --> Users
         JWT --> TenantUsers
-        class Users database;
-        class Tenants database;
-        class TenantUsers database;
+        class Users dbClass;
+        class Tenants dbClass;
+        class TenantUsers dbClass;
     end
 
     UserInterface --> |"Sends Credentials"| SecurityMiddleware
