@@ -15,9 +15,9 @@ graph TD
     classDef storage fill:#f59e0b,stroke:#b45309,stroke-width:2px,color:#fff,font-weight:bold,rx:5px,ry:5px;
 
     subgraph ContactsInterface["Frontend Contacts UI"]
-        List[Contacts List & Search Grid]
-        ImportModal[CSV / XLSX Import <br> Wizard & Mapper]
-        WS[WebSocket Progress Listener]
+        List["Contacts List & Search Grid"]
+        ImportModal["CSV / XLSX Import <br> Wizard & Mapper"]
+        WS["WebSocket Progress Listener"]
         
         List --> ImportModal
         ImportModal --> WS
@@ -27,12 +27,12 @@ graph TD
     end
 
     subgraph ContactsAPI["Contacts API Gateway"]
-        InitAPI[POST /import/initialize <br> Presigned URL Gen]
-        ProcessAPI[POST /import/process <br> Queue Trigger]
-        WSGW[WebSocket Gateway <br> Redis Sub]
+        InitAPI["POST /import/initialize <br> Presigned URL Gen"]
+        ProcessAPI["POST /import/process <br> Queue Trigger"]
+        WSGW["WebSocket Gateway <br> Redis Sub"]
         
         ImportModal --> InitAPI
-        ImportModal --> |"Direct Upload"| S3[(Object Storage: S3/MinIO/Supabase)]
+        ImportModal --> |"Direct Upload"| S3[("Object Storage: S3/MinIO/Supabase")]
         ImportModal --> ProcessAPI
         WSGW --> WS
         class InitAPI api;
@@ -42,9 +42,9 @@ graph TD
     end
 
     subgraph ImportWorker["RabbitMQ Data Worker"]
-        Chunker[Async Stream Parser <br> Chunksize=500]
-        Validator[Audit & Validation Service]
-        DLQ[RabbitMQ Dead-Letter Queue]
+        Chunker["Async Stream Parser <br> Chunksize=500"]
+        Validator["Audit & Validation Service"]
+        DLQ["RabbitMQ Dead-Letter Queue"]
         
         ProcessAPI --> |"Job ID"| Chunker
         Chunker --> |"Stream bytes"| S3
@@ -56,9 +56,9 @@ graph TD
     end
 
     subgraph DataLayer["Contact Storage & Audit"]
-        Contacts[(Contacts Table <br> Upsert Logic)]
-        Rejections[(Import Rejected Rows <br> Failure Log)]
-        Redis[(Redis Pub/Sub <br> Progress Events)]
+        Contacts[("Contacts Table <br> Upsert Logic")]
+        Rejections[("Import Rejected Rows <br> Failure Log")]
+        Redis[("Redis Pub/Sub <br> Progress Events")]
         
         Validator --> Contacts
         Validator --> Rejections
@@ -67,7 +67,6 @@ graph TD
         class Contacts database;
         class Rejections database;
         class Redis database;
-        class DBLogic logic;
     end
 
     classDef dualBox fill:#f8fafc,stroke:#cbd5e1,stroke-width:2px,stroke-dasharray: 4 4;

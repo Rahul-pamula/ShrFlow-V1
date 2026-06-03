@@ -13,13 +13,13 @@ graph TD
     classDef client fill:#3b82f6,stroke:#1d4ed8,stroke-width:2px,color:#fff,font-weight:bold,rx:10px,ry:10px;
     classDef storage fill:#475569,stroke:#334155,stroke-width:2px,color:#fff,rx:5px,ry:5px;
 
-    AIClient([AI Client / Agent]) --> |"Talks via stdio/SSE"| MCPServer[ShrFlow MCP Server]
+    AIClient(["AI Client / Agent"]) --> |"Talks via stdio/SSE"| MCPServer["ShrFlow MCP Server"]
     class AIClient client;
     class MCPServer mcp;
 
     subgraph MCPLayer["MCP Interface Layer"]
-        Tools[MCP Tools: DB, Logs, Workers]
-        Resources[MCP Resources: Docs, Plans]
+        Tools["MCP Tools: DB, Logs, Workers"]
+        Resources["MCP Resources: Docs, Plans"]
         MCPServer --> Tools
         MCPServer --> Resources
         class Tools mcp;
@@ -27,9 +27,9 @@ graph TD
     end
 
     subgraph AppInternal["App Internal Logic"]
-        DBLogic[Database / RLS Manager]
-        LogLogic[Log Tailing Service]
-        QueueLogic[RabbitMQ / Redis Monitor]
+        DBLogic["Database / RLS Manager"]
+        LogLogic["Log Tailing Service"]
+        QueueLogic["RabbitMQ / Redis Monitor"]
         
         Tools --> DBLogic
         Tools --> LogLogic
@@ -40,9 +40,9 @@ graph TD
     end
 
     subgraph Persistence["Data & State"]
-        PG[(PostgreSQL / Supabase)]
-        Redis[(Redis State)]
-        Docs[(Project Roadmap)]
+        PG[("PostgreSQL / Supabase")]
+        Redis[("Redis State")]
+        Docs[("Project Roadmap")]
         
         DBLogic --> PG
         LogLogic --> Docs

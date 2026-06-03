@@ -14,10 +14,10 @@ graph TD
     classDef database fill:#475569,stroke:#334155,stroke-width:2px,color:#fff,font-weight:bold,rx:5px,ry:5px;
 
     subgraph DispatchWorker["RabbitMQ Delivery Worker"]
-        RMQ[(RabbitMQ Queue)]
-        Injector[CAN-SPAM / HMAC Unsub Injector]
-        SMTP[Dynamic TLS SMTP Sender]
-        DLQ[(Dead Letter Queue)]
+        RMQ[("RabbitMQ Queue")]
+        Injector["CAN-SPAM / HMAC Unsub Injector"]
+        SMTP["Dynamic TLS SMTP Sender"]
+        DLQ[("Dead Letter Queue")]
         
         RMQ --> Injector
         Injector --> SMTP
@@ -29,8 +29,8 @@ graph TD
     end
 
     subgraph ExternalProvider["Email Delivery Provider"]
-        SES[AWS SES / Mailtrap]
-        Inbox[Recipient Inbox]
+        SES["AWS SES / Mailtrap"]
+        Inbox["Recipient Inbox"]
         
         SMTP --> |"Authenticates & Sends"| SES
         SES --> Inbox
@@ -39,9 +39,9 @@ graph TD
     end
 
     subgraph FeedbackLoop["Webhook Resolution API"]
-        Webhook[SES Complaint/Bounce Receiver]
-        HardBounce[Hard Bounce Isolator]
-        Spam[Spam Complaint Isolator]
+        Webhook["SES Complaint/Bounce Receiver"]
+        HardBounce["Hard Bounce Isolator"]
+        Spam["Spam Complaint Isolator"]
         
         SES -.-> |"Fires Event"| Webhook
         Webhook --> HardBounce
@@ -52,8 +52,8 @@ graph TD
     end
 
     subgraph ContactState["Contact Integrity DB"]
-        Contacts[(Contacts Table)]
-        Reputation[(Tenant Reputation <br> Warmup Stats)]
+        Contacts[("Contacts Table")]
+        Reputation[("Tenant Reputation <br> Warmup Stats")]
         
         HardBounce --> |"Sets status=bounced"| Contacts
         Spam --> |"Sets status=unsubscribed"| Contacts

@@ -14,9 +14,9 @@ graph TD
     classDef database fill:#475569,stroke:#334155,stroke-width:2px,color:#fff,font-weight:bold,rx:5px,ry:5px;
 
     subgraph CampaignUI["Frontend Orchestration"]
-        Wizard[Multi-Step Campaign Wizard]
-        Checklist[Pre-Send Validation UI]
-        Controls[Pause / Cancel Mid-Send]
+        Wizard["Multi-Step Campaign Wizard"]
+        Checklist["Pre-Send Validation UI"]
+        Controls["Pause / Cancel Mid-Send"]
         
         Wizard --> Checklist
         Checklist --> Controls
@@ -26,9 +26,9 @@ graph TD
     end
 
     subgraph CampaignAPI["Campaign Processing Logic"]
-        Snapshot[HTML Template Snapshot Generator]
-        Spintax[Spintax & Merge Tag Resolver]
-        Rate[Throttling / Send Rate Limit Engine]
+        Snapshot["HTML Template Snapshot Generator"]
+        Spintax["Spintax & Merge Tag Resolver"]
+        Rate["Throttling / Send Rate Limit Engine"]
         
         Checklist --> |"Triggers Dispatch"| Snapshot
         Snapshot --> Spintax
@@ -39,8 +39,8 @@ graph TD
     end
 
     subgraph ScheduledWorker["Background Schedulers"]
-        Cron[Schedule Poller <br> 60s Check]
-        DistLock[Redis Distributed Lock]
+        Cron["Schedule Poller <br> 60s Check"]
+        DistLock["Redis Distributed Lock"]
         
         Cron <--> DistLock
         Cron --> |"Fires Due Campaigns"| Snapshot
@@ -49,8 +49,8 @@ graph TD
     end
 
     subgraph CampaignData["Orchestration Storage"]
-        Campaigns[(Campaign Metadata)]
-        Intents[(Dispatch Intents <br> Per-Recipient Row)]
+        Campaigns[("Campaign Metadata")]
+        Intents[("Dispatch Intents <br> Per-Recipient Row")]
         
         Wizard --> Campaigns
         Rate --> Intents

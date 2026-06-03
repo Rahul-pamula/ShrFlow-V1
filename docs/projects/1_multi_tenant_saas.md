@@ -14,10 +14,10 @@ graph TD
     classDef database fill:#475569,stroke:#334155,stroke-width:2px,color:#fff,font-weight:bold,rx:5px,ry:5px;
 
     subgraph UserInterface["Frontend UX & Onboarding"]
-        Login[Login & Signup Pages <br> w/ Google/GitHub OAuth]
-        Wizard[Multi-Step Wizard <br> Workspace > Use-Case]
-        DashboardShell[Dashboard Sidebar & Layout]
-        Context[Global AuthContext state]
+        Login["Login & Signup Pages <br> w/ Google/GitHub OAuth"]
+        Wizard["Multi-Step Wizard <br> Workspace > Use-Case"]
+        DashboardShell["Dashboard Sidebar & Layout"]
+        Context["Global AuthContext state"]
         
         Login --> Context
         Wizard --> DashboardShell
@@ -28,9 +28,9 @@ graph TD
     end
 
     subgraph SecurityMiddleware["Next.js & FastAPI Middleware"]
-        RouteGuard[Next.js Route Protection Redirects]
-        FastAPIGuard[FastAPI Active-Tenant Resolver]
-        RateLimit[IP / Email Login Rate Limiter]
+        RouteGuard["Next.js Route Protection Redirects"]
+        FastAPIGuard["FastAPI Active-Tenant Resolver"]
+        RateLimit["IP / Email Login Rate Limiter"]
         
         Context -.-> |"Carries JWT"| RouteGuard
         RouteGuard --> RateLimit
@@ -41,9 +41,9 @@ graph TD
     end
 
     subgraph AuthEngine["Authentication & Tenancy API"]
-        JWT[Custom JWT Issuer <br> Short-Lived Access]
-        Revocation[Token Version Revocation]
-        Bcrypt[Bcrypt Password Hashing]
+        JWT["Custom JWT Issuer <br> Short-Lived Access"]
+        Revocation["Token Version Revocation"]
+        Bcrypt["Bcrypt Password Hashing"]
         
         FastAPIGuard --> JWT
         JWT --> Revocation
@@ -53,9 +53,9 @@ graph TD
     end
 
     subgraph TenantModel["Tenant Database Architecture"]
-        Users[(Users Table)]
-        Tenants[(Tenants Table)]
-        TenantUsers[(Tenant_Users Join)]
+        Users[("Users Table")]
+        Tenants[("Tenants Table")]
+        TenantUsers[("Tenant_Users Join")]
         
         Users --> TenantUsers
         Tenants --> TenantUsers

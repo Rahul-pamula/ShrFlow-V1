@@ -14,9 +14,9 @@ graph TD
     classDef database fill:#475569,stroke:#334155,stroke-width:2px,color:#fff,font-weight:bold,rx:5px,ry:5px;
 
     subgraph DesignStudio["Frontend Design Studio"]
-        Sidebar[Elements & Templates Sidebar]
-        Store[(Centralized Design Store <br> Zustand / Redux)]
-        Canvas[Reactive Canvas Renderer]
+        Sidebar["Elements & Templates Sidebar"]
+        Store[("Centralized Design Store <br> Zustand / Redux")]
+        Canvas["Reactive Canvas Renderer"]
         
         Sidebar --> |"Dispatch Action"| Store
         Store --> |"Reactive Update"| Canvas
@@ -26,9 +26,9 @@ graph TD
     end
 
     subgraph ProcessingLayer["Template Processing Engine"]
-        API[Template Service API]
-        Compiler[MJML compiler <br> JSON > HTML]
-        Validator[Layout Validation Service]
+        API["Template Service API"]
+        Compiler["MJML compiler <br> JSON > HTML"]
+        Validator["Layout Validation Service"]
         
         Store -.-> |"Save design_json"| API
         API --> Validator
@@ -39,9 +39,9 @@ graph TD
     end
 
     subgraph AsyncOperations["Async Background Workers"]
-        Thumbnail[Thumbnail Worker <br> Puppeteer / Headless]
-        Versioning[Version Snapshot Service]
-        Assets[Asset Manager <br> S3 / CDN]
+        Thumbnail["Thumbnail Worker <br> Puppeteer / Headless"]
+        Versioning["Version Snapshot Service"]
+        Assets["Asset Manager <br> S3 / CDN"]
         
         API --> |"Enqueue"| Thumbnail
         API --> Versioning
@@ -52,8 +52,8 @@ graph TD
     end
 
     subgraph PersistenceLayer["Storage"]
-        DB[(PostgreSQL <br> design_json + HTML)]
-        S3Storage[(S3 Object Storage)]
+        DB[("PostgreSQL <br> design_json + HTML")]
+        S3Storage[("S3 Object Storage")]
         
         API --> DB
         Assets --> S3Storage
