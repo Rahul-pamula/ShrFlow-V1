@@ -1,173 +1,383 @@
-# 🎨 Visual Platform Tour & Codebase Mapping
+# Product Tour
 
-Welcome to the visual developer walkthrough. Below, you will find high-fidelity screenshots of **every user-facing page, settings panel, and workspace route** in the ShrFlow platform, directly mapped to its corresponding Next.js client component and route folder in the codebase.
+This visual tour is organized by workflow so you can understand the product the way a user experiences it. Every card includes the image, the related app route, and the reason that screen exists.
 
----
+<div class="callout info">
+  <span class="callout-icon">🧭</span>
+  <div>Use this page for orientation first. Open the full-size image from any card when you need to inspect finer UI details.</div>
+</div>
 
-## 📣 Marketing & Authentication Layer
+## Marketing & Access
 
-### 1. Marketing Landing Page
-* **Code Route Location:** `platform/client/src/app/(marketing)/page.tsx`
-* **Filename:** `landing-page.png`
-* **Purpose:** High-conversion homepage demonstrating campaign creation, sending capabilities, and visual template building.
+<div class="tour-grid">
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/landing-page.png" target="_blank" rel="noopener">
+      <img src="screen-shots/landing-page.png" alt="Marketing landing page" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Marketing Landing Page</div>
+      <p>High-conversion homepage used to introduce ShrFlow, guide users into the product, and frame the platform value clearly.</p>
+      <div class="tour-meta"><code>platform/client/src/app/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/signup.png" target="_blank" rel="noopener">
+      <img src="screen-shots/signup.png" alt="User signup screen" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Signup & Onboarding Entry</div>
+      <p>Registration gateway for creating a tenant-aware account and beginning the onboarding flow into the main workspace.</p>
+      <div class="tour-meta"><code>platform/client/src/app/signup/page.tsx</code></div>
+    </div>
+  </div>
+</div>
 
-![Marketing Landing Page](landing-page.png)
+## Workspace Setup & Onboarding
 
-### 2. User Onboarding Signup
-* **Code Route Location:** `platform/client/src/app/(auth)/signup/page.tsx`
-* **Filename:** `signup.png`
-* **Purpose:** Multi-tenant registration gateway creating a standard account and initiating the progressive onboarding wizard.
+<div class="tour-grid">
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/onboarding-step-1.png" target="_blank" rel="noopener">
+      <img src="screen-shots/onboarding-step-1.png" alt="Workspace setup step 1" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Onboarding Step 1: Workspace Name</div>
+      <p>Initial step to define the workspace name and set the user's role, configuring tenant-aware system settings.</p>
+      <div class="tour-meta"><code>platform/client/src/app/onboarding/workspace/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/onboarding-step-2.png" target="_blank" rel="noopener">
+      <img src="screen-shots/onboarding-step-2.png" alt="Workspace setup step 2" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Onboarding Step 2: Primary Use Case</div>
+      <p>Tailors recommendations and dashboard priorities around transactional, marketing, or event-based automation.</p>
+      <div class="tour-meta"><code>platform/client/src/app/onboarding/use-case/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/onboarding-step-3.png" target="_blank" rel="noopener">
+      <img src="screen-shots/onboarding-step-3.png" alt="Workspace setup step 3" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Onboarding Step 3: Event Sources</div>
+      <p>Selects target sources (APIs, webapps, mobile) to prepare documentation, webhook setups, and developer keys.</p>
+      <div class="tour-meta"><code>platform/client/src/app/onboarding/integrations/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/onboarding-step-4.png" target="_blank" rel="noopener">
+      <img src="screen-shots/onboarding-step-4.png" alt="Workspace setup step 4" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Onboarding Step 4: Expected Scale</div>
+      <p>Establishes sending volumes and system rate limits to set sensible throughput guardrails for the tenant.</p>
+      <div class="tour-meta"><code>platform/client/src/app/onboarding/scale/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/onboarding-success.png" target="_blank" rel="noopener">
+      <img src="screen-shots/onboarding-success.png" alt="Workspace activation success" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Workspace Activation Complete</div>
+      <p>Success screen confirming workspace activation and providing an entry button to the control dashboard.</p>
+      <div class="tour-meta"><code>platform/client/src/app/onboarding/complete/page.tsx</code></div>
+    </div>
+  </div>
+</div>
 
-![User Onboarding Signup](signup.png)
+## Core Workspace Operations
 
----
+<div class="tour-grid">
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/dashboard.png" target="_blank" rel="noopener">
+      <img src="screen-shots/dashboard.png" alt="Workspace dashboard" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Control Center Dashboard</div>
+      <p>The main operational home screen displaying system health, delivery metrics, sending volumes, and suggesting actions.</p>
+      <div class="tour-meta"><code>platform/client/src/app/dashboard/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/dashboard-checklist.png" target="_blank" rel="noopener">
+      <img src="screen-shots/dashboard-checklist.png" alt="Dashboard checklist" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Workspace Launch Checklist</div>
+      <p>Guides owners through key domain authentication, sender verification, and audience ingestion steps needed for launch.</p>
+      <div class="tour-meta"><code>platform/client/src/app/dashboard/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/contacts-import-step-1.png" target="_blank" rel="noopener">
+      <img src="screen-shots/contacts-import-step-1.png" alt="Contacts Ingestion Wizard" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Import Wizard: File Upload</div>
+      <p>Drag-and-drop wizard step supporting CSV or Excel file formats for importing contact lists up to 2MB.</p>
+      <div class="tour-meta"><code>platform/client/src/app/contacts/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/contacts-import-step-2.png" target="_blank" rel="noopener">
+      <img src="screen-shots/contacts-import-step-2.png" alt="Contacts Wizard Mapping" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Import Wizard: Column Mapping</div>
+      <p>Maps uploaded file headers directly to platform schema fields (First Name, Last Name, Email, or skip fields).</p>
+      <div class="tour-meta"><code>platform/client/src/app/contacts/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/contacts-import-step-3.png" target="_blank" rel="noopener">
+      <img src="screen-shots/contacts-import-step-3.png" alt="Contacts Wizard Review" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Import Wizard: Review & Confirm</div>
+      <p>Verifies file row counts, formats, and mapped field layouts before final ingestion processing begins.</p>
+      <div class="tour-meta"><code>platform/client/src/app/contacts/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/contacts-import-step-4.png" target="_blank" rel="noopener">
+      <img src="screen-shots/contacts-import-step-4.png" alt="Contacts Wizard Success" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Import Wizard: Complete</div>
+      <p>Displays real-time ingestion outcome details including total processed rows, successful additions, and errors.</p>
+      <div class="tour-meta"><code>platform/client/src/app/contacts/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/contacts-import-history.png" target="_blank" rel="noopener">
+      <img src="screen-shots/contacts-import-history.png" alt="Contacts import history list" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Audience Ingestion Logs</div>
+      <p>Historical audit trail of all contact file uploads, batch sizes, completion states, and success ratios.</p>
+      <div class="tour-meta"><code>platform/client/src/app/contacts/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/contacts-import-history-errors.png" target="_blank" rel="noopener">
+      <img src="screen-shots/contacts-import-history-errors.png" alt="Contacts Ingestion Errors" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Ingestion Error Resolution</div>
+      <p>Detailed view highlighting specific validation failures (e.g. invalid email formats) and action-required items.</p>
+      <div class="tour-meta"><code>platform/client/src/app/contacts/batch/[batchId]/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/contacts-suppression-list.png" target="_blank" rel="noopener">
+      <img src="screen-shots/contacts-suppression-list.png" alt="Suppression list" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Deliverability Suppression List</div>
+      <p>Lists unsubscribed, bounced, or spam-complained contacts excluded automatically from outbound campaigns.</p>
+      <div class="tour-meta"><code>platform/client/src/app/contacts/suppression/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/templates-list.png" target="_blank" rel="noopener">
+      <img src="screen-shots/templates-list.png" alt="Templates library" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Templates Library</div>
+      <p>A reusable template workspace for MJML-based email layouts, edits, and quick access to saved creative assets.</p>
+      <div class="tour-meta"><code>platform/client/src/app/templates/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/campaigns-list.png" target="_blank" rel="noopener">
+      <img src="screen-shots/campaigns-list.png" alt="Campaign list" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Campaigns List</div>
+      <p>The main orchestration view for draft, scheduled, sending, paused, and completed campaigns across the tenant.</p>
+      <div class="tour-meta"><code>platform/client/src/app/campaigns/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/analytics.png" target="_blank" rel="noopener">
+      <img src="screen-shots/analytics.png" alt="Analytics page" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Analytics Dashboard</div>
+      <p>Campaign performance reporting for opens, clicks, delivery results, and engagement trends over time.</p>
+      <div class="tour-meta"><code>platform/client/src/app/analytics/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/infrastructure.png" target="_blank" rel="noopener">
+      <img src="screen-shots/infrastructure.png" alt="Infrastructure status page" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Infrastructure Status</div>
+      <p>Operational visibility into worker status, queue behavior, key services, and environment health signals.</p>
+      <div class="tour-meta"><code>platform/client/src/app/infrastructure/page.tsx</code></div>
+    </div>
+  </div>
+</div>
 
-## 💼 Core Workspace Operations
+## Workspace Administration & Settings
 
-### 3. Workspace Control Center Dashboard
-* **Code Route Location:** `platform/client/src/app/(platform)/[tenantId]/dashboard/page.tsx`
-* **Filename:** `dashboard.png`
-* **Purpose:** High-level dashboard presenting key operational statistics (sent emails, deliverability health percentage, bounce metrics) and the launch setup checklist.
+<div class="tour-grid">
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/settings-general.png" target="_blank" rel="noopener">
+      <img src="screen-shots/settings-general.png" alt="General settings" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">General Settings</div>
+      <p>Workspace identity, branding, and top-level personalization settings used to shape the tenant environment.</p>
+      <div class="tour-meta"><code>platform/client/src/app/settings/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/settings-organization.png" target="_blank" rel="noopener">
+      <img src="screen-shots/settings-organization.png" alt="Organization settings" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Organization Settings</div>
+      <p>Legal and mailing profile details that support compliance-sensitive email sending and account governance.</p>
+      <div class="tour-meta"><code>platform/client/src/app/settings/organization/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/settings-team.png" target="_blank" rel="noopener">
+      <img src="screen-shots/settings-team.png" alt="Team management settings" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Team Management</div>
+      <p>Invitations, role management, and access changes for shared workspace collaboration.</p>
+      <div class="tour-meta"><code>platform/client/src/app/settings/team/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/settings-franchise.png" target="_blank" rel="noopener">
+      <img src="screen-shots/settings-franchise.png" alt="Franchise settings" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Franchise Accounts</div>
+      <p>Parent-child workspace management for multi-tenant structures that need distributed operational control.</p>
+      <div class="tour-meta"><code>platform/client/src/app/settings/franchises/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/settings-requests.png" target="_blank" rel="noopener">
+      <img src="screen-shots/settings-requests.png" alt="Workspace requests settings" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Workspace Requests</div>
+      <p>Approval and denial flows for permissions or requests generated by subordinate accounts or franchise branches.</p>
+      <div class="tour-meta"><code>platform/client/src/app/settings/requests/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/settings-billing.png" target="_blank" rel="noopener">
+      <img src="screen-shots/settings-billing.png" alt="Billing settings" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Billing & Plan</div>
+      <p>Subscription details, plan limits, and commercial controls for the tenant workspace.</p>
+      <div class="tour-meta"><code>platform/client/src/app/settings/billing/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/settings-audit-history.png" target="_blank" rel="noopener">
+      <img src="screen-shots/settings-audit-history.png" alt="Audit history settings" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Audit History</div>
+      <p>Change history and security-sensitive activity log for governance, investigations, and operational review.</p>
+      <div class="tour-meta"><code>platform/client/src/app/settings/audit/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/settings-sending-domains.png" target="_blank" rel="noopener">
+      <img src="screen-shots/settings-sending-domains.png" alt="Sending domains settings" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Sending Domains</div>
+      <p>Domain verification and DNS setup for authenticated outbound campaign delivery.</p>
+      <div class="tour-meta"><code>platform/client/src/app/settings/domain/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/settings-sending-domains-connect.png" target="_blank" rel="noopener">
+      <img src="screen-shots/settings-sending-domains-connect.png" alt="Connect domain modal" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Domain Ingestion Modal</div>
+      <p>Pop-up verification flow for adding and configuring new sending domains at the DNS level.</p>
+      <div class="tour-meta"><code>platform/client/src/app/settings/domain/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/settings-sender-identities.png" target="_blank" rel="noopener">
+      <img src="screen-shots/settings-sender-identities.png" alt="Sender identities settings" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Sender Identities</div>
+      <p>Verified sender addresses that connect authenticated domains to campaign sending workflows.</p>
+      <div class="tour-meta"><code>platform/client/src/app/settings/senders/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/settings-api-keys.png" target="_blank" rel="noopener">
+      <img src="screen-shots/settings-api-keys.png" alt="API keys settings" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">API Keys</div>
+      <p>Token creation and management for product integrations and programmatic access to the platform.</p>
+      <div class="tour-meta"><code>platform/client/src/app/settings/api-keys/page.tsx</code></div>
+    </div>
+  </div>
+</div>
 
-![Workspace Control Center Dashboard](dashboard.png)
+## Personal Account Center
 
-### 4. Audience Import History
-* **Code Route Location:** `platform/client/src/app/(platform)/[tenantId]/contacts/import-history/page.tsx`
-* **Filename:** `contacts-import-history.png`
-* **Purpose:** Detailed logs representing imported contact lists, status of the background RabbitMQ CSV stream-parsing job, raw rows processed, and error/rejected counts.
-
-![Audience Import History](contacts-import-history.png)
-
-### 5. Email Layouts Library
-* **Code Route Location:** `platform/client/src/app/(platform)/[tenantId]/templates/page.tsx`
-* **Filename:** `templates-list.png`
-* **Purpose:** View-grid representing all user-saved MJML email templates, including status checks and quick-edit options.
-
-![Email Layouts Library](templates-list.png)
-
-### 6. Campaign Orchestration List
-* **Code Route Location:** `platform/client/src/app/(platform)/[tenantId]/campaigns/page.tsx`
-* **Filename:** `campaigns-list.png`
-* **Purpose:** Displays all bulk marketing campaigns with details on progress (Sent, Draft, Sending, Paused) and dispatch rate metrics.
-
-![Campaign Orchestration List](campaigns-list.png)
-
-### 7. Core Analytics & Reports
-* **Code Route Location:** `platform/client/src/app/(platform)/[tenantId]/analytics/page.tsx`
-* **Filename:** `analytics.png`
-* **Purpose:** Detailed campaign performance charts tracking deliveries, opens (pixel triggers), clicks, and spam complaints.
-
-![Core Analytics & Reports](analytics.png)
-
-### 8. System Infrastructure Status
-* **Code Route Location:** `platform/client/src/app/(platform)/[tenantId]/infrastructure/page.tsx`
-* **Filename:** `infrastructure.png`
-* **Purpose:** Unified devops portal showing system latency, worker heartbeat tracking, RabbitMQ queue depths, and Redis key status.
-
-![System Infrastructure Status](infrastructure.png)
-
----
-
-## ⚙️ Workspace Administration & Settings
-
-### 9. General Settings & Personalization
-* **Code Route Location:** `platform/client/src/app/(platform)/[tenantId]/settings/general/page.tsx`
-* **Filename:** `settings-general.png`
-* **Purpose:** Workspace name configuration, logo upload, and metadata customization settings.
-
-![General Settings](settings-general.png)
-
-### 10. Organization Settings
-* **Code Route Location:** `platform/client/src/app/(platform)/[tenantId]/settings/organization/page.tsx`
-* **Filename:** `settings-organization.png`
-* **Purpose:** Legal profile details for physical mailing address settings (critical for CAN-SPAM compliance headers).
-
-![Organization Settings](settings-organization.png)
-
-### 11. Team Members Management
-* **Code Route Location:** `platform/client/src/app/(platform)/[tenantId]/settings/team/page.tsx`
-* **Filename:** `settings-team.png`
-* **Purpose:** Standard active members panel allowing workspace Owners/Admins to invite new users, revoke access, and change roles.
-
-![Team Members Management](settings-team.png)
-
-### 12. Franchise Setup & Multi-Tenancy
-* **Code Route Location:** `platform/client/src/app/(platform)/[tenantId]/settings/franchise/page.tsx`
-* **Filename:** `settings-franchise.png`
-* **Purpose:** Hierarchical account builder used to set up child or franchise workspaces linked under a parent scope.
-
-![Franchise Setup](settings-franchise.png)
-
-### 13. Franchise Requests Inbox
-* **Code Route Location:** `platform/client/src/app/(platform)/[tenantId]/settings/requests/page.tsx`
-* **Filename:** `settings-requests.png`
-* **Purpose:** Access request control deck enabling parents to approve/deny operational privilege requests made by sub-franchise accounts.
-
-![Franchise Requests Inbox](settings-requests.png)
-
-### 14. Workspace SaaS Billing
-* **Code Route Location:** `platform/client/src/app/(platform)/[tenantId]/settings/billing/page.tsx`
-* **Filename:** `settings-billing.png`
-* **Purpose:** Plan limit monitors showing real-time monthly email limits and credit card subscription details.
-
-![Workspace SaaS Billing](settings-billing.png)
-
-### 15. Security Audit Log
-* **Code Route Location:** `platform/client/src/app/(platform)/[tenantId]/settings/audit-history/page.tsx`
-* **Filename:** `settings-audit-history.png`
-* **Purpose:** Immutable compliance list representing all critical admin actions performed in the workspace.
-
-![Security Audit Log](settings-audit-history.png)
-
-### 16. DNS Sending Domains
-* **Code Route Location:** `platform/client/src/app/(platform)/[tenantId]/settings/sending-domains/page.tsx`
-* **Filename:** `settings-sending-domains.png`
-* **Purpose:** Configures custom AWS SES DKIM/SPF TXT records to authenticate outbound bulk email servers.
-
-![DNS Sending Domains](settings-sending-domains.png)
-
-### 17. Verified Sender Identities
-* **Code Route Location:** `platform/client/src/app/(platform)/[tenantId]/settings/sender-identities/page.tsx`
-* **Filename:** `settings-sender-identities.png`
-* **Purpose:** Set up "From" address sender profiles (e.g. `newsletter@domain.com`) that link to authenticated domains.
-
-![Verified Sender Identities](settings-sender-identities.png)
-
-### 18. API Keys & Credentials
-* **Code Route Location:** `platform/client/src/app/(platform)/[tenantId]/settings/api-keys/page.tsx`
-* **Filename:** `settings-api-keys.png`
-* **Purpose:** Create, copy, and scope bearer tokens to interact with the API endpoints programmatically.
-
-![API Keys](settings-api-keys.png)
-
----
-
-## 👤 Personal Account Center
-
-### 19. Core Workspace Selection Portal
-* **Code Route Location:** `platform/client/src/app/(platform)/account/page.tsx`
-* **Filename:** `account-center.png`
-* **Purpose:** Multi-workspace gateway page presenting all tenants a user belongs to, pending invitations, and the option to launch a new workspace.
-
-![Workspace Selection Portal](account-center.png)
-
-### 20. Personal Profile Editor
-* **Code Route Location:** `platform/client/src/app/(platform)/account/profile/page.tsx`
-* **Filename:** `account-personal-details.png`
-* **Purpose:** Update first/last names, avatar pictures, and default dashboard preferences.
-
-![Personal Profile Editor](account-personal-details.png)
-
-### 21. User Security Center
-* **Code Route Location:** `platform/client/src/app/(platform)/account/security/page.tsx`
-* **Filename:** `account-security.png`
-* **Purpose:** MFA configurations, password upgrades, and dynamic list of active sessions with "Revoke All" capability.
-
-![User Security Center](account-security.png)
-
-### 22. Account Deletion Gateway (GDPR Compliance)
-* **Code Route Location:** `platform/client/src/app/(platform)/account/security/components/DeletionModal.tsx`
-* **Filename:** `account-deletion-modal.png`
-* **Purpose:** Trigger modal enabling irreversible profile scrubbing with RLS-cascaded access revocation.
-
-![Account Deletion Gateway](account-deletion-modal.png)
+<div class="tour-grid">
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/account-center.png" target="_blank" rel="noopener">
+      <img src="screen-shots/account-center.png" alt="Account center" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Workspace Selection Portal</div>
+      <p>A cross-tenant hub where a user can choose a workspace, inspect invitations, or create a new workspace.</p>
+      <div class="tour-meta"><code>platform/client/src/app/account/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/account-personal-details.png" target="_blank" rel="noopener">
+      <img src="screen-shots/account-personal-details.png" alt="Personal profile settings" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Personal Profile</div>
+      <p>User-level profile details such as names, avatar settings, and personal account preferences.</p>
+      <div class="tour-meta"><code>platform/client/src/app/account/profile/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/account-security.png" target="_blank" rel="noopener">
+      <img src="screen-shots/account-security.png" alt="Security center" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Security Center</div>
+      <p>Password, session, and MFA-related controls for a user's personal security posture.</p>
+      <div class="tour-meta"><code>platform/client/src/app/account/security/page.tsx</code></div>
+    </div>
+  </div>
+  <div class="tour-card">
+    <a class="tour-thumb" href="screen-shots/account-deletion-modal.png" target="_blank" rel="noopener">
+      <img src="screen-shots/account-deletion-modal.png" alt="Account deletion modal" loading="lazy" decoding="async">
+    </a>
+    <div class="tour-body">
+      <div class="tour-title">Account Deletion Modal</div>
+      <p>The destructive-account path for irreversible profile removal and tenant access revocation workflows.</p>
+      <div class="tour-meta"><code>platform/client/src/app/account/security/page.tsx</code></div>
+    </div>
+  </div>
+</div>

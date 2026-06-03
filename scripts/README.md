@@ -1,29 +1,29 @@
-# Platform Automation & Utility Scripts
+# Project Utility Scripts
 
-This folder contains utility scripts for database setup, deployment, data seeding, and platform monitoring. Always run these from the **project root** directory.
+This folder contains the scripts that still look like reusable project utilities. They should be run from the repository root and reviewed before use in shared environments.
 
-## Core Database & Setup Scripts
-
-| Script | Purpose | How to Run |
-|---|---|---|
-| `apply_all_migrations.py` | Connects to PostgreSQL via `DATABASE_URL` and applies all schema migrations sequentially. Uses `schema.sql` first. | `python3 scripts/apply_all_migrations.py` |
-| `apply_rls.py` | Connects via `DATABASE_URL` and applies all Row Level Security (RLS) policies for multi-tenant isolation. | `python3 scripts/apply_rls.py` |
-| `seed_templates.py` | Seeds default high-fidelity MJML campaign templates into the database. | `python3 scripts/seed_templates.py` |
-| `seed_dev_data.py` | Seeds mock development tenants, users, and tasks for local testing. | `python3 scripts/seed_dev_data.py` |
-| `schema.sql` | Base schema snapshot used by `apply_all_migrations.py`. Reference only. | View only |
-
-## Infrastructure & Monitoring Scripts
+## Keepers
 
 | Script | Purpose | How to Run |
 |---|---|---|
-| `e2e_readiness_check.py` | Validates end-to-end local platform readiness by testing S3, RabbitMQ, and DB connections. | `python3 scripts/e2e_readiness_check.py` |
-| `region_monitor.py` | ESP-grade active-region health check and coordinator/lease manager for high-availability multi-region setups. | `python3 scripts/region_monitor.py` |
+| `apply_sql.py` | Apply a SQL file using the Supabase RPC helper | `python scripts/apply_sql.py path/to/file.sql` |
+| `apply_sql_direct.py` | Apply a SQL file using `DATABASE_URL` directly | `python scripts/apply_sql_direct.py path/to/file.sql` |
+| `check_db.py` | Quick database inspection helper | `python scripts/check_db.py` |
+| `e2e_readiness_check.py` | Environment readiness check for local infrastructure | `python scripts/e2e_readiness_check.py` |
+| `install_vps.sh` | VPS bootstrap helper for reverse-proxy deployment | `bash scripts/install_vps.sh <domain> <email>` |
+| `region_monitor.py` | Region heartbeat and task reclamation worker | `python scripts/region_monitor.py` |
+| `reputation_sync.py` | Domain reputation recalculation worker | `python scripts/reputation_sync.py` |
+| `run_migration.sh` | Apply a targeted onboarding migration | `bash scripts/run_migration.sh` |
+| `run_template_migration.sh` | Apply the template table migration | `bash scripts/run_template_migration.sh` |
+| `schema.sql` | Database schema snapshot for reference | View only |
+| `seed_dev_data.py` | Development seeding scaffold | `python scripts/seed_dev_data.py` |
+| `seed_templates.py` | Seed starter templates into the database | `python scripts/seed_templates.py` |
+| `start_tunnel.sh` | Reverse tunnel helper for a local-to-VPS connection | `bash scripts/start_tunnel.sh user@host` |
 
-## VPS Deployment Utilities (Optional)
+## Cleanup Notes
 
-| Script | Purpose | How to Run |
-|---|---|---|
-| `install_vps.sh` | One-shot script to set up Nginx, SSH gateway ports, and Certbot/SSL certificates on Ubuntu VPS. | `sudo bash scripts/install_vps.sh <domain> <email>` |
-| `start_tunnel.sh` | Sets up a persistent, auto-reconnecting SSH reverse tunnel from local environment to VPS. | `./scripts/start_tunnel.sh <user>@<domain>` |
+- Removed duplicate `*_scratch.py` utilities.
+- Removed one-off diagnostic files from `scratch/`.
+- Removed scripts with hardcoded or environment-specific connection details that should not live in the repo.
 
-> **Note:** Ensure your `.env` file at the project root contains a valid `DATABASE_URL` before running any database or setup scripts.
+> Make sure you have the required environment variables in your local `.env` before running any database or infrastructure scripts.

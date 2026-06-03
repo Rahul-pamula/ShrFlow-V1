@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 
 load_dotenv(dotenv_path=Path(__file__).resolve().parents[1] / ".env")
 
-MIGRATION_FILE = Path(__file__).resolve().parents[1] / "migrations" / "035_rls_tenant_isolation.sql"
+MIGRATION_FILE = Path(__file__).parent / "035_rls_tenant_isolation.sql"
 
 
 def split_sql(sql: str) -> list[str]:
