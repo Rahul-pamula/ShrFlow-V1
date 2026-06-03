@@ -79,3 +79,12 @@ old_code.py
 test_db.py
 platform/client/tsconfig.tsbuildinfo
 platform/client/tsconfig.tsbuildinfo
+
+# LaTeX Build Artifacts
+*.aux
+*.fdb_latexmk
+*.fls
+*.out
+*.synctex.gz
+*.toc
+
