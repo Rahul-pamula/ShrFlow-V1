@@ -8,8 +8,13 @@
   * [Domain Verification](getting-started/verify-domain.md)
   * [First Campaign](getting-started/first-campaign.md)
 
+* **System Design**
+  * [High-Level Design](system_design/high_level_design.md)
+  * [Low-Level Designs](system_design/low_level_designs/README.md)
+
 * **Architecture & Operations**
   * [Delivery Engine](advanced/deliverability-engine.md)
+  * [AI & RAG Intelligence](advanced/ai-rag-architecture.md)
   * [Webhooks & Events](advanced/webhooks.md)
   * [RBAC & Security](advanced/rbac-security.md)
   * [Database RLS](advanced/database-rls.md)
@@ -30,20 +35,10 @@
   * [CSV Import Errors](troubleshooting/csv-import.md)
   * [DNS Issues](troubleshooting/domain-issues.md)
 
-* **Resume Projects Showcase**
-  * <a href="https://github.com/Rahul-pamula/ShrFlow-V1/blob/main/docs/projects/README.md" target="_blank" rel="noopener">Showcase Overview</a>
-  * <a href="https://github.com/Rahul-pamula/ShrFlow-V1/blob/main/docs/projects/1_multi_tenant_saas.md" target="_blank" rel="noopener">1. Multi-Tenant SaaS Core</a>
-  * <a href="https://github.com/Rahul-pamula/ShrFlow-V1/blob/main/docs/projects/2_csv_ingestion.md" target="_blank" rel="noopener">2. High-Volume CSV Ingestion</a>
-  * <a href="https://github.com/Rahul-pamula/ShrFlow-V1/blob/main/docs/projects/3_email_builder.md" target="_blank" rel="noopener">3. No-Code Email Builder</a>
-  * <a href="https://github.com/Rahul-pamula/ShrFlow-V1/blob/main/docs/projects/4_campaign_dispatcher.md" target="_blank" rel="noopener">4. Async Campaign Dispatcher</a>
-  * <a href="https://github.com/Rahul-pamula/ShrFlow-V1/blob/main/docs/projects/5_domain_provisioning.md" target="_blank" rel="noopener">5. DKIM/SPF SES Setup</a>
-  * <a href="https://github.com/Rahul-pamula/ShrFlow-V1/blob/main/docs/projects/6_mcp_developer_intelligence.md" target="_blank" rel="noopener">6. AI MCP Intelligence</a>
-
 * **Internal Planning**
   * [Planning Hub](plan/README.md)
-  * [Strategic Overview](plan/overview.md)
-  * <a href="https://github.com/Rahul-pamula/ShrFlow-V1/blob/main/docs/plan/phase_wise_plan.md" target="_blank" rel="noopener">Phase Roadmap</a>
   * [Client Requirements](plan/client_req.md)
+  * [Strategic Overview](plan/overview.md)
+  * <a href="https://github.com/runway-digital-2026/ShrFlow/blob/main/docs/plan/phase_wise_plan.md" target="_blank" rel="noopener">Phase Roadmap</a>
   * [Phase Library](plan/phases/README.md)
   * [Audit Library](plan/audits/README.md)
-
